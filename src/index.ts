@@ -1,10 +1,14 @@
 import dotenv from 'dotenv';
 import logger from './logger.js'; // Import the logger
-import { ChatOpenAI } from "@langchain/openai";
-import { createReactAgent } from "@langchain/langgraph/prebuilt";
-import { HumanMessage, SystemMessage, ToolMessage, AIMessage, BaseMessage } from '@langchain/core/messages';
-
-
+import { ChatOpenAI } from '@langchain/openai';
+import { createReactAgent } from '@langchain/langgraph/prebuilt';
+import {
+  HumanMessage,
+  SystemMessage,
+  ToolMessage,
+  AIMessage,
+  BaseMessage,
+} from '@langchain/core/messages';
 
 // Define the main async function
 async function main() {
@@ -18,7 +22,7 @@ async function main() {
     apiKey: endpointApiKey,
     model: endpointId,
     configuration: {
-      baseURL: arkBaseUrl
+      baseURL: arkBaseUrl,
     },
     temperature: 0,
   });
@@ -27,29 +31,36 @@ async function main() {
     llm,
     tools: [],
   });
-  logger.debug('Agent init successfully.')
+  logger.debug('Agent init successfully.');
 
-  const stream = await agent.stream({messages: [new HumanMessage({content:"你好啊"})]}, { streamMode: "updates" });
+  const stream = await agent.stream(
+    { messages: [new HumanMessage({ content: '你好啊' })] },
+    { streamMode: 'updates' }
+  );
 
-  for await (const {agent, tools} of stream) {
-    const rawResponseMessages: BaseMessage[] = []
-      if(agent){
-        logger.debug(`[chatHandler] Receive ${agent.messages.length} AI Messages`);
-        rawResponseMessages.push(...agent.messages);
-      }else if(tools){
-        logger.debug(`[chatHandler] Receive ${tools.messages.length} Tool Messages`);
-        rawResponseMessages.push(...tools.messages);
-      }
+  for await (const { agent, tools } of stream) {
+    const rawResponseMessages: BaseMessage[] = [];
+    if (agent) {
+      logger.debug(
+        `[chatHandler] Receive ${agent.messages.length} AI Messages`
+      );
+      rawResponseMessages.push(...agent.messages);
+    } else if (tools) {
+      logger.debug(
+        `[chatHandler] Receive ${tools.messages.length} Tool Messages`
+      );
+      rawResponseMessages.push(...tools.messages);
+    }
 
-      for(let {response_metadata, content, id} of rawResponseMessages){
-        logger.info(`id: ${id}, content: ${content}`)
-        logger.info('response_metadata: ',response_metadata)
-      }
+    for (let { response_metadata, content, id } of rawResponseMessages) {
+      logger.info(`id: ${id}, content: ${content}`);
+      logger.info('response_metadata: ', response_metadata);
+    }
   }
 }
 
 // Call the main function
-main().catch(error => {
+main().catch((error) => {
   logger.error('Unhandled error in main function:', error);
   process.exit(1); // Exit with error code
 });
