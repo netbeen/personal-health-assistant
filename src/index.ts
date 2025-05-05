@@ -10,14 +10,6 @@ import { HumanMessage, SystemMessage, ToolMessage, AIMessage, BaseMessage } from
 async function main() {
   dotenv.config({ path: 'local.env' });
 
-  // Example of logging an object
-  const user = { id: 1, name: 'Test User' };
-  logger.info('User object:', user);
-
-  // Example of logging with string interpolation
-  const variable = process.env.MY_VARIABLE;
-  logger.info(`My variable value is: ${variable}`);
-
   const endpointId = process.env.ENDPOINT_ID;
   const endpointApiKey = process.env.ENDPOINT_API_KEY;
   const arkBaseUrl = process.env.ARK_BASE_URL;
