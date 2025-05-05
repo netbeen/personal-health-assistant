@@ -133,12 +133,9 @@ function buildWorkflow(healthAgentRunnable: Runnable): CompiledStateGraph<AgentS
   });
   logger.info('StateGraph 实例已创建。');
 
-  // 添加节点到图中
-  // 'health_agent' 节点: 绑定 callHealthAgentNode 函数，并传入 healthAgentRunnable
   workflow.addNode('health_agent', (state) => callHealthAgentNode(state, healthAgentRunnable));
-  // 'supervisor' 节点: 绑定 supervisorNode 函数
   workflow.addNode('supervisor', supervisorNode);
-  logger.info('节点 (health_agent, supervisor) 已添加到图中。');
+  logger.info('[buildWorkflow] health_agent, supervisor added into StateGraph.');
 
   // 定义图中的边 (连接关系和路由逻辑)
   // 添加从 'supervisor' 出发的条件边
@@ -146,9 +143,7 @@ function buildWorkflow(healthAgentRunnable: Runnable): CompiledStateGraph<AgentS
     'supervisor', // 起始节点
     routeLogic, // 用于决定下一个节点的路由函数
     {
-      // 如果 routeLogic 返回 'health_agent', 则跳转到 'health_agent' 节点
       'health_agent': 'health_agent',
-      // 如果 routeLogic 返回 END, 则结束流程
       [END]: END
     }
   );
@@ -163,9 +158,8 @@ function buildWorkflow(healthAgentRunnable: Runnable): CompiledStateGraph<AgentS
   workflow.setEntryPoint('supervisor');
   logger.info('图的入口点已设置为 Supervisor。');
 
-  // 编译图，生成可执行的应用
   const app = workflow.compile();
-  logger.info('LangGraph 应用已编译成功。');
+  logger.info('[buildWorkflow] LangGraph workflow compiled.');
   return app;
 }
 
@@ -201,9 +195,6 @@ async function runWorkflow(app: CompiledStateGraph<AgentState, Partial<AgentStat
   logger.info('--- 流式执行 Graph 结束 ---');
 }
 
-/**
- * 主函数 - 程序入口
- */
 async function main() {
   try {
     const llm = initializeEnvironmentAndLLM();
