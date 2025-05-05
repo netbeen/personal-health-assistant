@@ -11,7 +11,6 @@ const logger = winston.createLogger({
     winston.format.splat(),
     winston.format.json() // Log in JSON format
   ),
-  defaultMeta: { service: `${pkg.name}@${pkg.version}` },
   transports: [
     //
     // - Write all logs with importance level of `error` or less to `error.log`
