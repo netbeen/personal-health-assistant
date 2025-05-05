@@ -3,8 +3,6 @@ import logger from './logger.js'; // Import the logger
 
 dotenv.config({ path: 'local.env' });
 
-logger.info('Hello World'); // Use logger.info
-
 logger.debug('Environment Variables:', process.env); // Use logger.debug for detailed info
 logger.warn('This is a warning message.'); // Example warning
 logger.error('This is an error message.'); // Example error
