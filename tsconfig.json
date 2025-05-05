@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "module": "NodeNext",
+    "target": "ES6",
+    "moduleResolution": "NodeNext",
+    "esModuleInterop": true
+  },
+  "ts-node": {
+    "esm": true
+  }
+}
